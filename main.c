@@ -91,7 +91,12 @@ void join_serv(const char* port, const char* username)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE; // Connect to localhost
 
-	getaddrinfo(NULL, port, &hints, &res);
+	if (getaddrinfo(NULL, port, &hints, &res) != 0)
+	{
+		perror("could not find host");
+		exit(EXIT_FAILURE);
+	}
+	
 	sockfd = check_error(socket(res->ai_family, res->ai_socktype, res->ai_protocol)); // Create socket descriptor for client
 	check_error(connect(sockfd, res->ai_addr, res->ai_addrlen)); // Connect socket to server
 
