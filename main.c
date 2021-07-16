@@ -115,7 +115,7 @@ void join_serv(const char* port, const char* username)
 			strcat(data, ": ");
 			strcat(data, msg);
 
-			check_error(send(sockfd, data, strlen(data), 0)); // no point in checking for bytes sent because messages are small
+			check_error(send(sockfd, data, strlen(data), 0));
 		}
 	}
 }
