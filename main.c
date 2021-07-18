@@ -68,6 +68,12 @@ void handle_client_opt()
 	RESET_COLOR;
 
 	scanf("%s", user);
+	
+	if (strlen(user) > MAXUSERLEN)
+	{
+		perror("username too long");
+		exit(EXIT_FAILURE);
+	}
 
 	SET_YELLOW;
 	printf("Joined as ");
@@ -94,6 +100,12 @@ void join_serv(const char* port, const char* username)
 	if (getaddrinfo(NULL, port, &hints, &res) != 0)
 	{
 		perror("could not find host");
+		exit(EXIT_FAILURE);
+	}
+	
+	if (res == NULL)
+	{
+		perror("could not return any addresses");
 		exit(EXIT_FAILURE);
 	}
 	
@@ -141,7 +153,17 @@ void start_serv(const char* port)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	getaddrinfo(NULL, port, &hints, &res);
+	if (getaddrinfo(NULL, port, &hints, &res) != 0)
+	{
+		perror("could not find host");
+		exit(EXIT_FAILURE);
+	}
+	
+	if (res == NULL)
+	{
+		perror("could not return any addresses");
+		exit(EXIT_FAILURE);
+	}
 
 	sockfd = check_error(socket(res->ai_family, res->ai_socktype, res->ai_protocol)); // Create socket descriptor
 	check_error(bind(sockfd, res->ai_addr, res->ai_addrlen)); // Bind socket to specified port
